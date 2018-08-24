@@ -82,22 +82,36 @@ class _SmartFlutterState extends State<SmartFlutter> {
           children: <Widget>[
             widget.child,
             Positioned(
-              child: Container(
-                child: Text(
-                  toastMsg,
-                  style: TextStyle(fontSize: 15.0, color: Color(0xFFffffff)),
-                ),
-                decoration: BoxDecoration(
-                  color: Color(0x99000000),
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                ),
-                padding: EdgeInsets.all(10.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: buildToastView(),
               ),
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
               bottom: 0.0,
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildToastView() {
+    return IgnorePointer(
+      child: Container(
+        child: Text(
+          toastMsg,
+          style: TextStyle(fontSize: 15.0, color: Color(0xFFffffff)),
+        ),
+        decoration: BoxDecoration(
+          color: Color(0x99000000),
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(90.0),
+      ),
+      ignoring: true,
     );
   }
 
