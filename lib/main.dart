@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_is_easy/consts/themes.dart';
 import 'package:flutter_is_easy/demo_page/extend/toast_page.dart';
 import 'package:flutter_is_easy/demo_page/normal/change_theme_page.dart';
 import 'package:flutter_is_easy/demo_page/normal/deviceInfo_page.dart';
@@ -16,24 +17,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SmartFlutter(
-      child: new MaterialApp(
-        title: 'Flutter Demo',
-        theme: new ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          primarySwatch: Colors.blue,
-          platform: TargetPlatform.iOS,
-        ),
-        home: new MyHomePage(),
-        routes: {
-          TabsPage.routeName: (context) => new TabsPage(),
+      title: 'Flutter Demo',
+      theme: Themes.blue(context),
+      home: new MyHomePage(),
+      routes: {
+        TabsPage.routeName: (context) => new TabsPage(),
 //          DemoPage.routeName: (context) => new DemoPage(),
-          DeviceInfoPage.routeName: (context) => new DeviceInfoPage(),
-          ScreenAdaptationPage.routeName: (context) =>
-              new ScreenAdaptationPage(),
-          ToastPage.routeName: (context) => new ToastPage(),
-          ChangeThemePage.routeName: (context) => new ChangeThemePage(),
-        },
-      ),
+        DeviceInfoPage.routeName: (context) => new DeviceInfoPage(),
+        ScreenAdaptationPage.routeName: (context) => new ScreenAdaptationPage(),
+        ToastPage.routeName: (context) => new ToastPage(),
+        ChangeThemePage.routeName: (context) => new ChangeThemePage(),
+      },
     );
   }
 }
