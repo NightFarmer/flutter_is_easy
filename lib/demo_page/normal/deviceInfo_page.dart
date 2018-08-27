@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_is_easy/main.dart';
 
 class DeviceInfoPage extends StatelessWidget {
   static var routeName = "/deviceInfoPage";
@@ -38,12 +39,6 @@ class DeviceInfoPage extends StatelessWidget {
     ].map((it) {
       return ListTile(
         title: it,
-//        contentPadding: EdgeInsets.all(0.0),
-//        dense: true,
-//          selected:true,
-        onTap: (){
-          print("123");
-        },
       );
     }).toList();
   }

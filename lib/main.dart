@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_is_easy/demo_page/extend/toast_page.dart';
+import 'package:flutter_is_easy/demo_page/normal/change_theme_page.dart';
 import 'package:flutter_is_easy/demo_page/normal/deviceInfo_page.dart';
 import 'dart:math';
 
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
           ScreenAdaptationPage.routeName: (context) =>
               new ScreenAdaptationPage(),
           ToastPage.routeName: (context) => new ToastPage(),
+          ChangeThemePage.routeName: (context) => new ChangeThemePage(),
         },
       ),
     );
@@ -49,7 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text("Home Page"),
       ),
       body: new ListView(
-        children: <Widget>[
+        children: ListTile.divideTiles(
+          context: context,
+          tiles: [
 //          new ListTile(
 //            title: new RaisedButton(
 //                child: new Text("Route to Tabs".toUpperCase()),
@@ -57,32 +62,23 @@ class _MyHomePageState extends State<MyHomePage> {
 //                  Navigator.of(context).pushNamed(TabsPage.routeName);
 //                }),
 //          ),
-          new ListTile(
-            title: new Text("Route to Tabs"),
-            onTap: () {
-              Navigator.of(context).pushNamed(TabsPage.routeName);
-            },
-          ),
-          new ListTile(
-            title: new Text("Toast"),
-            onTap: () {
-              Navigator.of(context).pushNamed(ToastPage.routeName);
-            },
-          ),
-          new ListTile(
-            title: new Text("设备信息"),
-            onTap: () {
-              Navigator.of(context).pushNamed(DeviceInfoPage.routeName);
-            },
-          ),
-          new ListTile(
-            title: new Text("屏幕适配"),
-            onTap: () {
-              Navigator.of(context).pushNamed(ScreenAdaptationPage.routeName);
-            },
-          ),
-        ],
+            buildRow("Route to Tabs", TabsPage.routeName),
+            buildRow("Toast", ToastPage.routeName),
+            buildRow("设备信息", DeviceInfoPage.routeName),
+            buildRow("屏幕适配", ScreenAdaptationPage.routeName),
+            buildRow("动态修改主题", ChangeThemePage.routeName),
+          ],
+        ).toList(),
       ),
+    );
+  }
+
+  buildRow(label, routeName) {
+    return ListTile(
+      title: Text(label),
+      onTap: () {
+        Navigator.of(context).pushNamed(routeName);
+      },
     );
   }
 }
