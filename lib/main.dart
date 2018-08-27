@@ -1,5 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_is_easy/demo_page/extend/toast_page.dart';
+import 'package:flutter_is_easy/demo_page/normal/deviceInfo_page.dart';
 import 'dart:math';
+
+import 'package:flutter_is_easy/demo_page/extend/screen_adaptation_page.dart';
+import 'package:flutter_is_easy/widgets/smart_flutter.dart';
 
 void main() => runApp(new MyApp());
 
@@ -10,115 +17,21 @@ class MyApp extends StatelessWidget {
       child: new MaterialApp(
         title: 'Flutter Demo',
         theme: new ThemeData(
+          scaffoldBackgroundColor: Colors.white,
           primarySwatch: Colors.blue,
+          platform: TargetPlatform.iOS,
         ),
         home: new MyHomePage(),
         routes: {
           TabsPage.routeName: (context) => new TabsPage(),
-          DemoPage.routeName: (context) => new DemoPage(),
+//          DemoPage.routeName: (context) => new DemoPage(),
+          DeviceInfoPage.routeName: (context) => new DeviceInfoPage(),
+          ScreenAdaptationPage.routeName: (context) =>
+              new ScreenAdaptationPage(),
+          ToastPage.routeName: (context) => new ToastPage(),
         },
       ),
     );
-  }
-}
-
-class SmartFlutter extends StatefulWidget {
-  final Widget child;
-
-  SmartFlutter({Key key, this.child}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _SmartFlutterState();
-  }
-
-  static _SmartFlutterState of(BuildContext context, {bool nullOk: false}) {
-    assert(nullOk != null);
-    assert(context != null);
-    final _SmartFlutterState result =
-        context.ancestorStateOfType(const TypeMatcher<_SmartFlutterState>());
-    if (nullOk || result != null) return result;
-    throw new FlutterError(
-        'Scaffold.of() called with a context that does not contain a Scaffold.\n'
-        'No Scaffold ancestor could be found starting from the context that was passed to Scaffold.of(). '
-        'This usually happens when the context provided is from the same StatefulWidget as that '
-        'whose build function actually creates the Scaffold widget being sought.\n'
-        'There are several ways to avoid this problem. The simplest is to use a Builder to get a '
-        'context that is "under" the Scaffold. For an example of this, please see the '
-        'documentation for Scaffold.of():\n'
-        '  https://docs.flutter.io/flutter/material/Scaffold/of.html\n'
-        'A more efficient solution is to split your build function into several widgets. This '
-        'introduces a new context from which you can obtain the Scaffold. In this solution, '
-        'you would have an outer widget that creates the Scaffold populated by instances of '
-        'your new inner widgets, and then in these inner widgets you would use Scaffold.of().\n'
-        'A less elegant but more expedient solution is assign a GlobalKey to the Scaffold, '
-        'then use the key.currentState property to obtain the ScaffoldState rather than '
-        'using the Scaffold.of() function.\n'
-        'The context used was:\n'
-        '  $context');
-  }
-}
-
-class _SmartFlutterState extends State<SmartFlutter> {
-  String toastMsg = "";
-
-  @override
-  Widget build(BuildContext context) {
-//    child: new Text("Hello World!", textDirection: TextDirection.ltr)
-//    return WidgetsApp(
-//      color: Colors.deepOrange,
-//      builder: (c, w) {
-//        return Stack(
-//          children: <Widget>[
-//            widget.child,
-//            Text("123"),
-//          ],
-//        );
-//      },
-//    );
-    return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            widget.child,
-            Positioned(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: buildToastView(),
-              ),
-              left: 0.0,
-              top: 0.0,
-              right: 0.0,
-              bottom: 0.0,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildToastView() {
-    return IgnorePointer(
-      child: Container(
-        child: Text(
-          toastMsg,
-          style: TextStyle(fontSize: 15.0, color: Color(0xFFffffff)),
-        ),
-        decoration: BoxDecoration(
-          color: Color(0x99000000),
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-        padding: EdgeInsets.all(10.0),
-        margin: EdgeInsets.all(90.0),
-      ),
-      ignoring: true,
-    );
-  }
-
-  toast(String msg) {
-    setState(() {
-      toastMsg = msg;
-    });
   }
 }
 
@@ -137,22 +50,36 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: new ListView(
         children: <Widget>[
+//          new ListTile(
+//            title: new RaisedButton(
+//                child: new Text("Route to Tabs".toUpperCase()),
+//                onPressed: () {
+//                  Navigator.of(context).pushNamed(TabsPage.routeName);
+//                }),
+//          ),
           new ListTile(
-            title: new Text("Home Body"),
+            title: new Text("Route to Tabs"),
+            onTap: () {
+              Navigator.of(context).pushNamed(TabsPage.routeName);
+            },
           ),
           new ListTile(
-            title: new RaisedButton(
-                child: new Text("Route to Tabs".toUpperCase()),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(TabsPage.routeName);
-                }),
+            title: new Text("Toast"),
+            onTap: () {
+              Navigator.of(context).pushNamed(ToastPage.routeName);
+            },
           ),
           new ListTile(
-            title: new RaisedButton(
-                child: new Text("Route to Demo".toUpperCase()),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(DemoPage.routeName);
-                }),
+            title: new Text("设备信息"),
+            onTap: () {
+              Navigator.of(context).pushNamed(DeviceInfoPage.routeName);
+            },
+          ),
+          new ListTile(
+            title: new Text("屏幕适配"),
+            onTap: () {
+              Navigator.of(context).pushNamed(ScreenAdaptationPage.routeName);
+            },
           ),
         ],
       ),
@@ -269,42 +196,6 @@ class _TransitTabState extends State<TransitTab> {
               }
             }),
       ],
-    );
-  }
-}
-
-class DemoPage extends StatefulWidget {
-  static String routeName = "/demoPage";
-
-  @override
-  State<StatefulWidget> createState() {
-    return _DemoPageState();
-  }
-}
-
-class _DemoPageState extends State<DemoPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("demo"),
-      ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: RaisedButton(
-                child: Text("toast"),
-                onPressed: () {
-                  SmartFlutter
-                      .of(context)
-                      .toast("测试" + Random().nextInt(10).toString());
-                },
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }
