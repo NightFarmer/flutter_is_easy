@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_is_easy/consts/themes.dart';
 import 'package:flutter_is_easy/demo_page/extend/toast_page.dart';
+import 'package:flutter_is_easy/demo_page/normal/animation_page.dart';
 import 'package:flutter_is_easy/demo_page/normal/change_theme_page.dart';
 import 'package:flutter_is_easy/demo_page/normal/deviceInfo_page.dart';
 import 'dart:math';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         ScreenAdaptationPage.routeName: (context) => new ScreenAdaptationPage(),
         ToastPage.routeName: (context) => new ToastPage(),
         ChangeThemePage.routeName: (context) => new ChangeThemePage(),
+        AnimationPage.routeName: (context) => new AnimationPage(),
       },
     );
   }
@@ -43,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Home Page"),
+        title: new Text("Flutter Is Easy"),
       ),
       body: new ListView(
         children: ListTile.divideTiles(
@@ -61,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
             buildRow("设备信息", DeviceInfoPage.routeName),
             buildRow("屏幕适配", ScreenAdaptationPage.routeName),
             buildRow("动态修改主题", ChangeThemePage.routeName),
+            buildRow("动画", AnimationPage.routeName),
           ],
         ).toList(),
       ),

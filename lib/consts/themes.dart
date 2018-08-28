@@ -5,7 +5,7 @@ class Themes {
     return ThemeData(
       primarySwatch: Colors.blue,
 //      scaffoldBackgroundColor: Colors.white,
-//      platform: TargetPlatform.iOS,
+      platform: TargetPlatform.iOS,
 //      textTheme: Theme.of(context).textTheme.apply(
 //            bodyColor: Colors.pinkAccent,
 //            displayColor: Colors.green,
@@ -17,7 +17,7 @@ class Themes {
     return ThemeData(
       primarySwatch: Colors.red,
 //      scaffoldBackgroundColor: Colors.white,
-//      platform: TargetPlatform.iOS,
+      platform: TargetPlatform.iOS,
 //      textTheme: Theme.of(context).textTheme.apply(
 //        bodyColor: Colors.pinkAccent,
 //        displayColor: Colors.green,

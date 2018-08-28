@@ -31,7 +31,7 @@ dp(value) {
 
 /// 以iPhone7Plus作为适配尺寸 逻辑尺寸为(宽414，高736)
 dpx(value) {
-  return value / ScreenAdaptation.screenWidth * 414;
+  return value / 414 * ScreenAdaptation.screenWidth;
 }
 
 vw(value) {
