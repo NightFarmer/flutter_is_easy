@@ -87,8 +87,10 @@ class SmartFlutter extends StatefulWidget {
 }
 
 class _SmartFlutterState extends State<SmartFlutter> {
-  String toastMsg = "";
   ThemeData theme;
+
+  final GlobalKey<_ToastLayerState> _toastKey =
+      new GlobalKey<_ToastLayerState>();
 
   @override
   void initState() {
@@ -129,10 +131,7 @@ class _SmartFlutterState extends State<SmartFlutter> {
               debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
             ),
             Positioned(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: buildToastView(),
-              ),
+              child: ToastLayer(key: _toastKey),
               left: 0.0,
               top: 0.0,
               right: 0.0,
@@ -141,6 +140,37 @@ class _SmartFlutterState extends State<SmartFlutter> {
           ],
         ),
       ),
+    );
+  }
+
+  toast(String msg) {
+    _toastKey.currentState?.toast(msg);
+  }
+
+  set appTheme(ThemeData theme) {
+    setState(() {
+      this.theme = theme;
+    });
+  }
+}
+
+class ToastLayer extends StatefulWidget {
+  ToastLayer({Key key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ToastLayerState();
+  }
+}
+
+class _ToastLayerState extends State<ToastLayer> {
+  String toastMsg = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: buildToastView(),
     );
   }
 
@@ -168,12 +198,6 @@ class _SmartFlutterState extends State<SmartFlutter> {
   toast(String msg) {
     setState(() {
       toastMsg = msg;
-    });
-  }
-
-  set appTheme(ThemeData theme) {
-    setState(() {
-      this.theme = theme;
     });
   }
 }
