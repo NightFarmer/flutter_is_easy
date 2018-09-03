@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_is_easy/utils/screen_adaptation.dart';
+
+import 'package:uuid/uuid.dart';
 
 class SmartFlutter extends StatefulWidget {
 //  final Widget child;
@@ -163,18 +168,63 @@ class ToastLayer extends StatefulWidget {
   }
 }
 
-class _ToastLayerState extends State<ToastLayer> {
+class _ToastLayerState extends State<ToastLayer>
+    with SingleTickerProviderStateMixin {
   String toastMsg = "";
+
+  AnimationController controller;
+
+  var showing = false;
+  var latestToastId;
+
+  @override
+  void initState() {
+    controller = new AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: buildToastView(),
+      child: _ToastView(
+        animation: controller,
+        toastMsg: toastMsg,
+        showing: showing,
+        child: buildToastView(),
+      ),
     );
   }
 
-  Widget buildToastView() {
+  toast(String msg) {
+    var uuid = new Uuid();
+    var currentToastId = uuid.v4();
+    latestToastId = currentToastId;
+    setState(() {
+      toastMsg = msg;
+      showing = true;
+      controller.reset();
+      controller.forward();
+    });
+    Future.delayed(Duration(milliseconds: 2000), () {
+      if (currentToastId == latestToastId) {
+        dismiss();
+      }
+    });
+  }
+
+  dismiss() {
+    setState(() {
+      showing = false;
+      controller.reset();
+      controller.forward();
+    });
+  }
+
+  buildToastView() {
     return IgnorePointer(
       child: Container(
         child: Text(
@@ -195,9 +245,79 @@ class _ToastLayerState extends State<ToastLayer> {
     );
   }
 
-  toast(String msg) {
-    setState(() {
-      toastMsg = msg;
-    });
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+
+class _ToastView extends AnimatedWidget {
+  final Tween<double> _opacityTweenShow = new Tween(begin: 0.0, end: 1.0);
+  final Tween<double> _opacityTweenDismiss = new Tween(begin: 1.0, end: 0.0);
+  final Tween<double> _translationTween = new Tween(begin: 0.15, end: 0.0);
+
+  final String toastMsg;
+  final Widget child;
+  final bool showing;
+
+  _ToastView({
+    Key key,
+    Animation<double> animation,
+    this.toastMsg,
+    this.showing,
+    this.child,
+  }) : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final Animation<double> animation = listenable;
+    var opacityAnimation = new CurvedAnimation(
+      parent: animation,
+      curve: OpacityCurve(),
+    );
+    var translationAnimation = new CurvedAnimation(
+      parent: animation,
+      curve: OvershootCurve(),
+    );
+    var translationY = 0.0;
+    var opacity = 1.0;
+    if (showing) {
+      opacity = _opacityTweenShow.evaluate(opacityAnimation);
+      translationY = _translationTween.evaluate(translationAnimation);
+    } else {
+      opacity = _opacityTweenDismiss.evaluate(opacityAnimation);
+    }
+    return Opacity(
+      opacity: opacity,
+      child: FractionalTranslation(
+        translation: Offset(0.0, translationY),
+        child: child,
+      ),
+    );
+  }
+}
+
+class OvershootCurve extends Curve {
+  const OvershootCurve([this.tension = 2.0]);
+
+  final double tension;
+
+  @override
+  double transform(double t) {
+    t -= 1.0;
+    return t * t * ((tension + 1) * t + tension) + 1.0;
+  }
+
+  @override
+  String toString() {
+    return '$runtimeType($tension)';
+  }
+}
+
+class OpacityCurve extends Curve {
+  @override
+  double transform(double t) {
+    return min(1.0, t * 2);
   }
 }
