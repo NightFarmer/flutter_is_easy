@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:math';
 
@@ -17,7 +16,7 @@ class ToastLayer extends StatefulWidget {
 
 class ToastLayerState extends State<ToastLayer>
     with SingleTickerProviderStateMixin {
-  String toastMsg = "";
+  String toastMsg;
 
   AnimationController controller;
 
@@ -35,15 +34,17 @@ class ToastLayerState extends State<ToastLayer>
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: _ToastView(
-        animation: controller,
-        toastMsg: toastMsg,
-        showing: showing,
-        child: buildToastView(),
-      ),
-    );
+    return toastMsg != null
+        ? Align(
+            alignment: Alignment.bottomCenter,
+            child: _ToastView(
+              animation: controller,
+              toastMsg: toastMsg,
+              showing: showing,
+              child: buildToastView(),
+            ),
+          )
+        : Container();
   }
 
   toast(String msg) {
@@ -128,7 +129,7 @@ class _ToastView extends AnimatedWidget {
       curve: _OvershootCurve(),
     );
     var translationY = 0.0;
-    var opacity = 1.0;
+    var opacity = 0.0;
     if (showing) {
       opacity = _opacityTweenShow.evaluate(opacityAnimation);
       translationY = _translationTween.evaluate(translationAnimation);
