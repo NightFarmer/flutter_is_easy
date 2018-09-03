@@ -148,8 +148,8 @@ class _SmartFlutterState extends State<SmartFlutter> {
     );
   }
 
-  toast(String msg) {
-    _toastKey.currentState?.toast(msg);
+  toast(msg, [alignment = Alignment.bottomCenter]) {
+    _toastKey.currentState?.toast(msg, alignment);
   }
 
   set appTheme(ThemeData theme) {

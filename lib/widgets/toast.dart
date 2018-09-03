@@ -16,7 +16,8 @@ class ToastLayer extends StatefulWidget {
 
 class ToastLayerState extends State<ToastLayer>
     with SingleTickerProviderStateMixin {
-  String toastMsg;
+  var toastMsg;
+  var alignment;
 
   AnimationController controller;
 
@@ -36,10 +37,9 @@ class ToastLayerState extends State<ToastLayer>
   Widget build(BuildContext context) {
     return toastMsg != null
         ? Align(
-            alignment: Alignment.bottomCenter,
+            alignment: alignment,
             child: _ToastView(
               animation: controller,
-              toastMsg: toastMsg,
               showing: showing,
               child: buildToastView(),
             ),
@@ -47,12 +47,13 @@ class ToastLayerState extends State<ToastLayer>
         : Container();
   }
 
-  toast(String msg) {
+  toast(msg, alignment) {
     var uuid = new Uuid();
     var currentToastId = uuid.v4();
     latestToastId = currentToastId;
     setState(() {
       toastMsg = msg;
+      this.alignment = alignment;
       showing = true;
       controller.reset();
       controller.forward();
@@ -73,8 +74,9 @@ class ToastLayerState extends State<ToastLayer>
   }
 
   buildToastView() {
-    return IgnorePointer(
-      child: Container(
+    Widget label;
+    if (toastMsg is String) {
+      label = Container(
         child: Text(
           toastMsg,
           style: TextStyle(fontSize: dpx(13.5), color: Color(0xFFffffff)),
@@ -88,7 +90,12 @@ class ToastLayerState extends State<ToastLayer>
           vertical: dpx(70.0),
           horizontal: dpx(50.0),
         ),
-      ),
+      );
+    } else if (toastMsg is Widget) {
+      label = toastMsg;
+    }
+    return IgnorePointer(
+      child: label,
       ignoring: true,
     );
   }
@@ -105,14 +112,12 @@ class _ToastView extends AnimatedWidget {
   final Tween<double> _opacityTweenDismiss = new Tween(begin: 1.0, end: 0.0);
   final Tween<double> _translationTween = new Tween(begin: 0.15, end: 0.0);
 
-  final String toastMsg;
   final Widget child;
   final bool showing;
 
   _ToastView({
     Key key,
     Animation<double> animation,
-    this.toastMsg,
     this.showing,
     this.child,
   }) : super(key: key, listenable: animation);
